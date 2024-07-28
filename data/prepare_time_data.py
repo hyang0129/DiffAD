@@ -91,7 +91,7 @@ class PrepareTimeData:
         data_end = math.ceil(self.row_num / self.size) * self.size
 
         for i in range(self.row_num, data_end):
-            df = df.append(pd.Series(), ignore_index=True)
+            df.loc[len(df)] = pd.Series(dtype='float64')
 
         df.fillna(0, inplace=True)
         return df
