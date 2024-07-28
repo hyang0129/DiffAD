@@ -344,7 +344,9 @@ class PrepareTimeData:
         df = df.set_index(['ind'], inplace=False).sort_index()
         df['label'] = data['label']
         for i in range(self.row_num, data.shape[0]):
-            df = df.append(pd.Series(), ignore_index=True)
+            # df = df.append(pd.Series(), ignore_index=True)
+            df.loc[len(df)] = pd.Series(dtype='float64')
+
         df.fillna(0, inplace=True)
         return df
 
