@@ -55,7 +55,7 @@ def time_test(params, strategy_params, temp_list):
         visuals = diffusion.get_current_visuals()
 
         print(visuals)
-        print([k, v.shape for k,v in visuals.items()])
+        print([(k, v.shape) for k,v in visuals.items()])
 
         for i in range(len(visuals['ORI'])):
             # loop through the visuals
