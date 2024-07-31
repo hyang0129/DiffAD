@@ -11,6 +11,7 @@ import model as Model
 from tqdm import tqdm
 
 import core.metrics as Metrics
+import numpy as np
 
 # train model
 if __name__ == '__main__':
@@ -113,6 +114,8 @@ if __name__ == '__main__':
 
         for _, train_data in enumerate(train_loader):
 
+            targets = []
+
             for i in range(len(train_data['ORI'])):
 
                 with torch.no_grad():
@@ -123,15 +126,12 @@ if __name__ == '__main__':
 
                 all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
 
-                print(differ_df)
-                print(differ_df.shape)
 
-                print(all_data)
-                print(all_data['differ'])
+                targets.append(np.array(all_data['differ']))
 
 
 
-            targets = differ_df
+            targets = torch.stack(targets, axis = 0)
 
 
             print(targets)
