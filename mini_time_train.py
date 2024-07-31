@@ -66,29 +66,34 @@ if __name__ == '__main__':
     save_model_iter = math.ceil(train_set.__len__() / opt['datasets']['train']['batch_size'])
 
 
-    # while current_epoch < n_epoch:
-    #     current_epoch += 1
-    #     for _, train_data in enumerate(train_loader):
-    #
-    #         current_step += 1
-    #         if current_epoch > n_epoch:
-    #             break
-    #         diffusion.feed_data(train_data)
-    #         diffusion.optimize_parameters()
-    #         # log
-    #         if current_epoch % opt['train']['print_freq'] == 0 and current_step % save_model_iter == 0:
-    #             logs = diffusion.get_current_log()
-    #             message = '<epoch:{:3d}, iter:{:8,d}> '.format(
-    #                 current_epoch, current_step)
-    #             for k, v in logs.items():
-    #                 message += '{:s}: {:.4e} '.format(k, v)
-    #                 tb_logger.add_scalar(k, v, current_step)
-    #             logger.info(message)
-    #
-    #         # save model
-    #         if current_epoch % opt['train']['save_checkpoint_freq'] == 0 and current_step % save_model_iter == 0:
-    #             logger.info('Saving models and training states.')
-    #             diffusion.save_network(current_epoch, current_step)
+    while current_epoch < n_epoch:
+        current_epoch += 1
+        for _, train_data in enumerate(train_loader):
+
+            for k, v in train_data.items():
+                print(k, v.shape)
+
+            raise
+
+            current_step += 1
+            if current_epoch > n_epoch:
+                break
+            diffusion.feed_data(train_data)
+            diffusion.optimize_parameters()
+            # log
+            if current_epoch % opt['train']['print_freq'] == 0 and current_step % save_model_iter == 0:
+                logs = diffusion.get_current_log()
+                message = '<epoch:{:3d}, iter:{:8,d}> '.format(
+                    current_epoch, current_step)
+                for k, v in logs.items():
+                    message += '{:s}: {:.4e} '.format(k, v)
+                    tb_logger.add_scalar(k, v, current_step)
+                logger.info(message)
+
+            # save model
+            if current_epoch % opt['train']['save_checkpoint_freq'] == 0 and current_step % save_model_iter == 0:
+                logger.info('Saving models and training states.')
+                diffusion.save_network(current_epoch, current_step)
 
     logger.info('End of Regular Training.')
 
