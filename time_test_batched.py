@@ -45,14 +45,21 @@ def time_test(params, strategy_params, temp_list):
     os.makedirs(result_path, exist_ok=True)
 
     for _, test_data in enumerate(test_loader):
+
+        for k,v in test_data.items():
+            print(k, v.shape)
+
         idx += 1
         diffusion.feed_data(test_data)
         diffusion.test(continous=False)
         visuals = diffusion.get_current_visuals()
 
+        print(visuals)
+        print([v.shape for k,v in visuals.items()])
+
         for i in range(len(visuals['ORI'])):
             # loop through the visuals
-            visual = { k : v[i] for k,v in visuals.items()}
+            visual = { k : v[i] for k, v in visuals.items()}
 
             all_data, sr_df, differ_df = Metrics.tensor2allcsv(visual, params['col_num'])
             all_datas = Metrics.merge_all_csv(all_datas, all_data)

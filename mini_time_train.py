@@ -118,9 +118,12 @@ if __name__ == '__main__':
             for k,v in train_data.items():
                 print(k, v.shape)
 
-            for visual in visuals:
-
+            for i in range(len(visuals['ORI'])):
+                # loop through the visuals
+                visual = {k: v[i] for k, v in visuals.items()}
                 all_data, sr_df, differ_df = Metrics.tensor2allcsv(visual, params['col_num'])
+
+
 
             targets = differ_df
 
