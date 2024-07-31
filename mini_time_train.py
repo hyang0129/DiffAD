@@ -73,8 +73,6 @@ if __name__ == '__main__':
             for k, v in train_data.items():
                 print(k, v.shape)
 
-            raise
-
             current_step += 1
             if current_epoch > n_epoch:
                 break
