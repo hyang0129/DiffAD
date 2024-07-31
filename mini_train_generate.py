@@ -58,6 +58,8 @@ def time_test(params, strategy_params, temp_list):
         sr_datas = Metrics.merge_all_csv(sr_datas, sr_df)
         differ_datas = Metrics.merge_all_csv(differ_datas, differ_df)
 
+        print(visuals)
+
         break
 
     all_datas = all_datas.reset_index(drop=True)
