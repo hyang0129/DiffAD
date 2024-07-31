@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
         for _, train_data in enumerate(train_loader):
 
-            for i in range(train_data['ORI']):
+            for i in range(len(train_data['ORI'])):
 
                 with torch.no_grad():
                     diffusion.feed_data({k: v[i] for k,v in train_data.items() } )
