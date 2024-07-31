@@ -110,18 +110,21 @@ if __name__ == '__main__':
 
         for _, train_data in enumerate(train_loader):
 
-            with torch.no_grad():
-                diffusion.feed_data(train_data)
-                diffusion.test(continous=False)
-                visuals = diffusion.get_current_visuals()
+            for i in range(train_data['ORI']):
 
-            for k,v in train_data.items():
-                print(k, v.shape)
+                with torch.no_grad():
+                    diffusion.feed_data({k: v[i] for k,v in train_data.items() } )
 
-            for i in range(len(visuals['ORI'])):
-                # loop through the visuals
-                visual = {k: v[i] for k, v in visuals.items()}
-                all_data, sr_df, differ_df = Metrics.tensor2allcsv(visual, params['col_num'])
+                    diffusion.test(continous=False)
+                    visuals = diffusion.get_current_visuals()
+
+                all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
+
+                print(differ_df)
+                print(differ_df.shape)
+
+                print(all_data)
+                print(all_data['differ'])
 
 
 
