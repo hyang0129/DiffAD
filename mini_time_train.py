@@ -150,8 +150,11 @@ if __name__ == '__main__':
             targets = torch.stack(targets, dim = 0)
             targets = targets.to(device)
 
+            print(targets.shape)
 
             predictions = [m(inp) for m in reg_models]
+
+            print(predictions[0].shape)
 
             losses = [loss_fn(pred, targets) for pred in predictions]
 
