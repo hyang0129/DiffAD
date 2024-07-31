@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
             targets = []
 
-            print( (k, v.shape) for k, v in train_data.items())
+            print((k, v.shape) for k, v in train_data.items())
 
             # # iterate to generate the diffs
             # for i in range(len(train_data['ORI'])):
@@ -135,8 +135,6 @@ if __name__ == '__main__':
             #
             # targets = torch.stack(torch.from_numpy(targets), dim = 0)
 
-
-            raise
 
 
 
