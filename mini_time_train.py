@@ -152,7 +152,7 @@ if __name__ == '__main__':
 
             print(targets.shape)
 
-            predictions = [m(inp) for m in reg_models]
+            predictions = [torch.squeeze(m(inp)) for m in reg_models]
 
             print(predictions[0].shape)
 
