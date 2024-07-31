@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
     logger.info('Begin Training Minimodels')
 
-    train_set = Data.create_dataset(dataset_opt, phase = 'val')
+    train_set = Data.create_dataset(dataset_opt, phase = 'test')
     train_loader = Data.create_dataloader(train_set, dataset_opt, phase = 'train')
 
     params = {
