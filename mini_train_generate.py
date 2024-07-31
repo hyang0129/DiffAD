@@ -47,7 +47,11 @@ def time_test(params, strategy_params, temp_list):
     for _, test_data in enumerate(test_loader):
         idx += 1
 
-        print(test_data)
+        print(test_data['ORI'].shape)
+        print(test_data['HR'].shape)
+        print(test_data['SR'].shape)
+
+
 
         diffusion.feed_data(test_data)
         diffusion.test(continous=False)
@@ -58,7 +62,6 @@ def time_test(params, strategy_params, temp_list):
         sr_datas = Metrics.merge_all_csv(sr_datas, sr_df)
         differ_datas = Metrics.merge_all_csv(differ_datas, differ_df)
 
-        print(visuals)
 
         break
 
