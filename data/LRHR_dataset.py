@@ -38,6 +38,6 @@ class LRHRDataset(Dataset):
         data_label = self.labels[index]
 
         if self.phase == 'train':
-            return {'HR': data_HR, 'SR': data_SR, 'Index': index}
+            return {'HR': data_HR, 'SR': data_SR, 'Index': index, 'ORI': data_ORI}
         else:
             return {'ORI': data_ORI, 'HR': data_HR, 'SR': data_SR, 'label': data_label, 'Index': index}
