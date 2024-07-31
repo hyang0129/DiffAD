@@ -19,7 +19,8 @@
       "datatype": "time",
       "l_resolution": 128,
       "r_resolution": 2048,
-      "data_len": -1
+      "data_len": -1,
+      "batch_size": 32
     }
   },
   "model": {
