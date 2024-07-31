@@ -127,6 +127,7 @@ if __name__ == '__main__':
 
 
 
+
             # iterate to generate the diffs
             for i in range(len(train_data['ORI'])):
 
@@ -138,7 +139,7 @@ if __name__ == '__main__':
 
                 all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
 
-                targets.append(np.array(all_data['differ']))
+                targets.append(torch.from_numpy(np.array(all_data['differ'])))
 
 
 
@@ -146,7 +147,7 @@ if __name__ == '__main__':
             inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
             inp = inp.to(device)
 
-            targets = torch.stack(torch.from_numpy(targets), dim = 0)
+            targets = torch.stack(targets, dim = 0)
             targets = targets.to(device)
 
 
