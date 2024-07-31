@@ -13,6 +13,8 @@ from tqdm import tqdm
 import core.metrics as Metrics
 import numpy as np
 
+from mini_model import get_mini_model
+
 # train model
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -110,30 +112,60 @@ if __name__ == '__main__':
         'col_num': train_set.col_num
     }
 
-    for i in tqdm(range(n_epoch)):
 
-        for _, train_data in enumerate(train_loader):
+    device = 'cuda'
+    reg_models, loss_fn, reg_optim, reg_base = get_mini_model(input_channels=64)
+
+    for i in tqdm(range(n_epoch)):
+        epoch_losses = []
+
+        for _, train_data in (pbar := tqdm(enumerate(train_loader))):
 
             targets = []
 
             print([(k, v.shape) for k, v in train_data.items()])
 
-            # # iterate to generate the diffs
-            # for i in range(len(train_data['ORI'])):
-            #
-            #     with torch.no_grad():
-            #         diffusion.feed_data({k: v[i:i+1] for k,v in train_data.items() } )
-            #
-            #         diffusion.test(continous=False)
-            #         visuals = diffusion.get_current_visuals()
-            #
-            #     all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
-            #
-            #     targets.append(np.array(all_data['differ']))
-            #
-            #
-            #
-            # targets = torch.stack(torch.from_numpy(targets), dim = 0)
+
+
+            # iterate to generate the diffs
+            for i in range(len(train_data['ORI'])):
+
+                with torch.no_grad():
+                    diffusion.feed_data({k: v[i:i+1] for k,v in train_data.items() } )
+
+                    diffusion.test(continous=False)
+                    visuals = diffusion.get_current_visuals()
+
+                all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
+
+                targets.append(np.array(all_data['differ']))
+
+
+
+            # go from B1TC to BTC
+            inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
+            inp = inp.to(device)
+
+            targets = torch.stack(torch.from_numpy(targets), dim = 0)
+            targets = targets.to(device)
+
+
+            predictions = [m(inp) for m in reg_models]
+
+            losses = [loss_fn(pred, targets) for pred in predictions]
+
+            for i, loss in enumerate(losses):
+                reg_optim[i].zero_grad()
+                loss.backward()
+                reg_optim[i].step()
+
+            epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
+
+            pbar.set_description(f'''
+            Training 
+            Loss : {float(torch.mean(torch.stack(epoch_losses)) ):.2f}  
+            ''' )
+
 
 
 
