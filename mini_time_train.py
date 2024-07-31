@@ -116,30 +116,27 @@ if __name__ == '__main__':
 
             targets = []
 
-            for i in range(len(train_data['ORI'])):
+            print( (k, v.shape) for k, v in train_data.items())
 
-                with torch.no_grad():
-                    diffusion.feed_data({k: v[i:i+1] for k,v in train_data.items() } )
+            # # iterate to generate the diffs
+            # for i in range(len(train_data['ORI'])):
+            #
+            #     with torch.no_grad():
+            #         diffusion.feed_data({k: v[i:i+1] for k,v in train_data.items() } )
+            #
+            #         diffusion.test(continous=False)
+            #         visuals = diffusion.get_current_visuals()
+            #
+            #     all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
+            #
+            #     targets.append(np.array(all_data['differ']))
+            #
+            #
+            #
+            # targets = torch.stack(torch.from_numpy(targets), dim = 0)
 
-                    diffusion.test(continous=False)
-                    visuals = diffusion.get_current_visuals()
-
-                all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
-
-
-                targets.append(np.array(all_data['differ']))
-
-
-
-            targets = torch.stack(targets, axis = 0)
-
-
-            print(targets)
 
             raise
-
-
-
 
 
 
