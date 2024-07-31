@@ -118,7 +118,10 @@ if __name__ == '__main__':
             for k,v in train_data.items():
                 print(k, v.shape)
 
-            all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
+            for visual in visuals:
+
+                all_data, sr_df, differ_df = Metrics.tensor2allcsv(visual, params['col_num'])
+
             targets = differ_df
 
 
