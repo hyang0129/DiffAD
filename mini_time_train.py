@@ -182,6 +182,7 @@ if __name__ == '__main__':
                     new_recon_data[k] = np.concatenate((new_recon_data[k], v), axis=0)
 
             np.savez(save_to, **new_recon_data)
+            logger.info('Saving Dataset')
 
         else:
             logger.info('We skipped all batches in this epoch')
