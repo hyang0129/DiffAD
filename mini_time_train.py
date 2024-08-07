@@ -119,39 +119,58 @@ if __name__ == '__main__':
     import os
     save_to = f'{os.path.basename(args.config).split(".")[0]}.npz'
 
+    skip_batches = 0
     if os.exists(save_to):
-        pass
+        logger.info('Existing NPZ archive exists')
+
+        old_recon_data = np.load(save_to)
+
+        existing_batches = len(old_recon_data['HR']) // opt['datasets']['train']['batch_size']
+
+        logger.info(f'There are {existing_batches} batches so far')
+
+        skip_batches = existing_batches
+
+
+
     else:
         recon_data = {'HR' : [], 'SR' : [], 'differ' : []}
+
+
 
     for i in tqdm(range(10)):
         epoch_losses = []
 
-        for _, train_data in (pbar := tqdm(enumerate(train_loader))):
+        for batch_i, train_data in (pbar := tqdm(enumerate(train_loader))):
 
-            targets = []
+            if batch_i < existing_batches:
+                continue
+            else:
+                # generate the data for that batch
 
-            # iterate to generate the diffs
-            for i in range(len(train_data['ORI'])):
+                targets = []
 
-                with torch.no_grad():
-                    diffusion.feed_data({k: v[i:i+1] for k,v in train_data.items() } )
+                # iterate to generate the diffs
+                for i in range(len(train_data['ORI'])):
 
-                    diffusion.test(continous=False)
-                    visuals = diffusion.get_current_visuals()
+                    with torch.no_grad():
+                        diffusion.feed_data({k: v[i:i+1] for k,v in train_data.items() } )
 
-                all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
+                        diffusion.test(continous=False)
+                        visuals = diffusion.get_current_visuals()
 
-                targets.append(torch.from_numpy(np.array(all_data['differ'])))
+                    all_data, sr_df, differ_df = Metrics.tensor2allcsv(visuals, params['col_num'])
 
-            targets = torch.stack(targets, dim=0)
-            print([(k, v.shape) for k, v in train_data.items()])
-            print('targets shape')
-            print(targets.shape)
+                    targets.append(torch.from_numpy(np.array(all_data['differ'])))
 
-            recon_data['HR'].append(train_data['HR'])
-            recon_data['SR'].append(train_data['SR'])
-            recon_data['differ'].append(targets)
+                targets = torch.stack(targets, dim=0)
+                print([(k, v.shape) for k, v in train_data.items()])
+                print('targets shape')
+                print(targets.shape)
+
+                recon_data['HR'].append(train_data['HR'])
+                recon_data['SR'].append(train_data['SR'])
+                recon_data['differ'].append(targets)
 
             break
 
@@ -160,6 +179,10 @@ if __name__ == '__main__':
     recon_data['SR'] = np.array(torch.cat(recon_data['SR'], dim=0))
     recon_data['differ'] = np.array(torch.cat(recon_data['differ'], dim=0))
 
+    if skip_batches > 0:
+
+        for k,v in old_recon_data.items():
+            recon_data[k] = np.concatenate((recon_data[k], v), axis=0)
 
 
     np.savez(save_to, **recon_data)
