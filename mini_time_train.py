@@ -143,7 +143,7 @@ if __name__ == '__main__':
 
         for batch_i, train_data in (pbar := tqdm(enumerate(train_loader))):
 
-            if batch_i < existing_batches:
+            if batch_i < skip_batches :
                 continue
             else:
                 # generate the data for that batch
