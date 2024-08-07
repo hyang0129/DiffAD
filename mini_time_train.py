@@ -126,9 +126,6 @@ if __name__ == '__main__':
 
             targets = []
 
-
-
-
             # iterate to generate the diffs
             for i in range(len(train_data['ORI'])):
 
