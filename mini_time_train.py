@@ -117,7 +117,7 @@ if __name__ == '__main__':
     # reg_models, loss_fn, reg_optim, reg_base = get_mini_model(input_channels=64)
 
     import os
-    save_to = f'{os.path.basename(args.config).split('.')[0]}.npz'
+    save_to = f'{os.path.basename(args.config).split(".")[0]}.npz'
 
     if os.exists(save_to):
         pass
