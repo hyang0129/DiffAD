@@ -120,7 +120,7 @@ if __name__ == '__main__':
     save_to = f'{os.path.basename(args.config).split(".")[0]}.npz'
 
     skip_batches = 0
-    if os.exists(save_to):
+    if os.path.exists(save_to):
         logger.info('Existing NPZ archive exists')
 
         old_recon_data = np.load(save_to)
