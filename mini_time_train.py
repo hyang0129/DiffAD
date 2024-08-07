@@ -132,18 +132,16 @@ if __name__ == '__main__':
         skip_batches = existing_batches
 
 
-
-    else:
-        recon_data = {'HR' : [], 'SR' : [], 'differ' : []}
-
-
+    counter = 0
+    recon_data = {'HR': [], 'SR': [], 'differ': []}
 
     for i in tqdm(range(10)):
         epoch_losses = []
 
         for batch_i, train_data in (pbar := tqdm(enumerate(train_loader))):
 
-            if batch_i < skip_batches :
+            counter += 1
+            if counter <= skip_batches :
                 continue
             else:
                 # generate the data for that batch
@@ -174,18 +172,19 @@ if __name__ == '__main__':
 
             break
 
+        # save every epoch so we don't lose too much progress
+        new_recon_data = {}
+        new_recon_data['HR'] = np.array(torch.cat(recon_data['HR'], dim=0))
+        new_recon_data['SR'] = np.array(torch.cat(recon_data['SR'], dim=0))
+        new_recon_data['differ'] = np.array(torch.cat(recon_data['differ'], dim=0))
 
-    recon_data['HR'] = np.array(torch.cat(recon_data['HR'], dim=0))
-    recon_data['SR'] = np.array(torch.cat(recon_data['SR'], dim=0))
-    recon_data['differ'] = np.array(torch.cat(recon_data['differ'], dim=0))
+        if skip_batches > 0:
+            for k,v in old_recon_data.items():
+                new_recon_data[k] = np.concatenate((new_recon_data[k], v), axis=0)
 
-    if skip_batches > 0:
+        np.savez(save_to, **new_recon_data)
 
-        for k,v in old_recon_data.items():
-            recon_data[k] = np.concatenate((recon_data[k], v), axis=0)
-
-
-    np.savez(save_to, **recon_data)
+        break
 
 
 
