@@ -142,7 +142,7 @@ if __name__ == '__main__':
 
             counter += 1
             if counter <= skip_batches :
-                continue
+                pass
             else:
                 # generate the data for that batch
 
@@ -162,9 +162,9 @@ if __name__ == '__main__':
                     targets.append(torch.from_numpy(np.array(all_data['differ'])))
 
                 targets = torch.stack(targets, dim=0)
-                print([(k, v.shape) for k, v in train_data.items()])
-                print('targets shape')
-                print(targets.shape)
+                # print([(k, v.shape) for k, v in train_data.items()])
+                # print('targets shape')
+                # print(targets.shape)
 
                 recon_data['HR'].append(train_data['HR'])
                 recon_data['SR'].append(train_data['SR'])
