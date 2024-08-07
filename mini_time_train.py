@@ -71,10 +71,10 @@ if __name__ == '__main__':
 
     while current_epoch < n_epoch:
         current_epoch += 1
-        for _, train_data in enumerate(train_loader):
+        for _, train_data in tqdm(enumerate(train_loader)):
 
-            for k, v in train_data.items():
-                print(k, v.shape)
+            # for k, v in train_data.items():
+            #     print(k, v.shape)
 
             current_step += 1
             if current_epoch > n_epoch:
