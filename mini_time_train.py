@@ -116,8 +116,13 @@ if __name__ == '__main__':
     device = 'cuda'
     # reg_models, loss_fn, reg_optim, reg_base = get_mini_model(input_channels=64)
 
+    import os
+    save_to = f'{os.path.basename(args.config).split('.')[0]}.npz'
 
-    recon_data = {'HR' : [], 'SR' : [], 'differ' : []}
+    if os.exists(save_to):
+        pass
+    else:
+        recon_data = {'HR' : [], 'SR' : [], 'differ' : []}
 
     for i in tqdm(range(10)):
         epoch_losses = []
@@ -148,17 +153,16 @@ if __name__ == '__main__':
             recon_data['SR'].append(train_data['SR'])
             recon_data['differ'].append(targets)
 
-        break
+            break
 
 
     recon_data['HR'] = np.array(torch.cat(recon_data['HR'], dim=0))
     recon_data['SR'] = np.array(torch.cat(recon_data['SR'], dim=0))
     recon_data['differ'] = np.array(torch.cat(recon_data['differ'], dim=0))
 
-    import os
-    save_to = os.path.basename(args.config).split('.')[0]
 
-    np.savez(f'{save_to}.npz', **recon_data)
+
+    np.savez(save_to, **recon_data)
 
 
 
