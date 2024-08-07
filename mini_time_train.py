@@ -100,10 +100,11 @@ if __name__ == '__main__':
 
 
 
-    logger.info('Begin Training Minimodels')
 
     train_set = Data.create_dataset(dataset_opt, phase = 'train')
     train_loader = Data.create_dataloader(train_set, dataset_opt, phase = 'train')
+
+    logger.info('Generating Minimodel Training Set')
 
     params = {
         'opt': opt,
@@ -112,18 +113,18 @@ if __name__ == '__main__':
         'col_num': train_set.col_num
     }
 
-
     device = 'cuda'
-    reg_models, loss_fn, reg_optim, reg_base = get_mini_model(input_channels=64)
+    # reg_models, loss_fn, reg_optim, reg_base = get_mini_model(input_channels=64)
 
-    for i in tqdm(range(n_epoch)):
+
+    recon_data = {'HR' : [], 'SR' : [], 'differ' : []}
+
+    for i in tqdm(range(10)):
         epoch_losses = []
 
         for _, train_data in (pbar := tqdm(enumerate(train_loader))):
 
             targets = []
-
-            print([(k, v.shape) for k, v in train_data.items()])
 
 
 
@@ -141,34 +142,44 @@ if __name__ == '__main__':
 
                 targets.append(torch.from_numpy(np.array(all_data['differ'])))
 
-
-
-            # go from B1TC to BTC
-            inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
-            inp = inp.to(device)
-
-            targets = torch.stack(targets, dim = 0)
-            targets = targets.to(device)
-
+            targets = torch.stack(targets, dim=0)
+            print([(k, v.shape) for k, v in train_data.items()])
+            print('targets shape')
             print(targets.shape)
 
-            predictions = [torch.squeeze(m(inp)) for m in reg_models]
+            recon_data['HR'].append(train_data['HR'])
+            recon_data['SR'].append(train_data['SR'])
+            recon_data['differ'].append(targets)
 
-            print(predictions[0].shape)
 
-            losses = [loss_fn(pred, targets) for pred in predictions]
 
-            for i, loss in enumerate(losses):
-                reg_optim[i].zero_grad()
-                loss.backward()
-                reg_optim[i].step()
 
-            epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
-
-            pbar.set_description(f'''
-            Training 
-            Loss : {float(torch.mean(torch.stack(epoch_losses)) ):.2f}  
-            ''' )
+            # # go from B1TC to BTC
+            # inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
+            # inp = inp.to(device)
+            #
+            #
+            # targets = targets.to(device)
+            #
+            # print(targets.shape)
+            #
+            # predictions = [torch.squeeze(m(inp)) for m in reg_models]
+            #
+            # print(predictions[0].shape)
+            #
+            # losses = [loss_fn(pred, targets) for pred in predictions]
+            #
+            # for i, loss in enumerate(losses):
+            #     reg_optim[i].zero_grad()
+            #     loss.backward()
+            #     reg_optim[i].step()
+            #
+            # epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
+            #
+            # pbar.set_description(f'''
+            # Training
+            # Loss : {float(torch.mean(torch.stack(epoch_losses)) ):.2f}
+            # ''' )
 
 
 
