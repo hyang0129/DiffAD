@@ -65,10 +65,10 @@ def time_test(params, strategy_params, temp_list):
         recon_data['label'].append(test_data['label'])
 
     import numpy as np
-    recon_data['HR'] = np.array(torch.cat(recon_data['HR'], dim=0))
-    recon_data['SR'] = np.array(torch.cat(recon_data['SR'], dim=0))
-    recon_data['differ'] = np.array(torch.cat(recon_data['differ'], dim=0))
-    recon_data['label'] = np.array(torch.cat(recon_data['label'], dim=0))
+    recon_data['HR'] = np.array(torch.cat(recon_data['HR'], dim=0).cpu())
+    recon_data['SR'] = np.array(torch.cat(recon_data['SR'], dim=0).cpu())
+    recon_data['differ'] = np.array(torch.cat(recon_data['differ'], dim=0).cpu())
+    recon_data['label'] = np.array(torch.cat(recon_data['label'], dim=0).cpu())
 
     np.savez_compressed(save_to, **recon_data)
 
