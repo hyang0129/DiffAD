@@ -12,6 +12,7 @@ import data as Data
 import model as Model
 from decimal import Decimal
 
+from tqdm import tqdm
 
 def time_test(params, strategy_params, temp_list):
     torch.backends.cudnn.enabled = True
@@ -47,7 +48,7 @@ def time_test(params, strategy_params, temp_list):
     save_to = f'{os.path.basename(args.config).split(".")[0]}.npz'
     recon_data = {'HR': [], 'SR': [], 'differ': [], 'label' : []}
 
-    for _, test_data in enumerate(test_loader):
+    for _, test_data in tqdm(enumerate(test_loader)):
         idx += 1
         diffusion.feed_data(test_data)
         diffusion.test(continous=False)
