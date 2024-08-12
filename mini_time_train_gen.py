@@ -188,6 +188,10 @@ if __name__ == '__main__':
             logger.info('We skipped all batches in this epoch')
 
 
+    logger.info('Finished Creating Training Samples')
+
+
+    # for i in range(n_epoch):
 
 
 
