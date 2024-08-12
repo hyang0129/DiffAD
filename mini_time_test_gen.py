@@ -47,6 +47,7 @@ def time_test(params, strategy_params, temp_list):
 
     save_to = f'{os.path.basename(args.config).split(".")[0]}.npz'
     recon_data = {'HR': [], 'SR': [], 'differ': [], 'label' : []}
+    import numpy as np
 
     for _, test_data in tqdm(enumerate(test_loader)):
         idx += 1
@@ -62,10 +63,10 @@ def time_test(params, strategy_params, temp_list):
 
         recon_data['HR'].append(test_data['HR'])
         recon_data['SR'].append(test_data['SR'])
-        recon_data['differ'].append(all_data['differ'])
+        recon_data['differ'].append(torch.from_numpy(np.array(all_data['differ'])))
         recon_data['label'].append(test_data['label'])
 
-    import numpy as np
+
     recon_data['HR'] = np.array(torch.cat(recon_data['HR'], dim=0).cpu())
     recon_data['SR'] = np.array(torch.cat(recon_data['SR'], dim=0).cpu())
     recon_data['differ'] = np.array(torch.cat(recon_data['differ'], dim=0).cpu())
