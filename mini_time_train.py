@@ -118,7 +118,7 @@ if __name__ == '__main__':
     for i in tqdm(range(n_epoch), desc = 'epochs'):
         epoch_losses = []
 
-        for ii, train_data in pbar := tqdm(enumerate(train_loader)):
+        for ii, train_data in (pbar := tqdm(enumerate(train_loader))):
             # # go from B1TC to BTC
             inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
             inp = inp.to(device)
