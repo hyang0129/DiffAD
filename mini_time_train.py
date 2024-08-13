@@ -182,7 +182,7 @@ if __name__ == '__main__':
             with torch.no_grad():
                 # print(torch.var(torch.var(torch.concat(pred_diffs, dim = -1), dim = -1), dim=-1) .shape   )
 
-                var_over_models = torch.var(torch.concat(pred_diffs, dim = -1), dim = -1)
+                var_over_models = torch.var(torch.stack(pred_diffs, dim = -1), dim = -1)
                 var_over_timesteps_of_var_over_models = torch.var(var_over_models, dim = 1)
 
             epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
