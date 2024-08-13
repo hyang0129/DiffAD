@@ -212,6 +212,9 @@ if __name__ == '__main__':
             for ii, train_data in (pbar := tqdm(enumerate(test_loader), mininterval=0.5)):
 
                 inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
+                # 11TC to TC
+                # TC to BTC
+                inp = torch.unsqueeze(torch.cat(inp, dim = 0))
                 inp = inp.to(device)
                 pred_diffs = [torch.squeeze(m(inp)) for m in reg_models]
 
