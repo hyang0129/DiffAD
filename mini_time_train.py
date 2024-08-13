@@ -86,7 +86,7 @@ if __name__ == '__main__':
     from torch.utils.data import Dataset
     class GeneratedData(Dataset):
         def __init__(self, recon_data):
-            self.recon_data = recon_data
+            self.recon_data = {k:v for k,v in recon_data.items()}
 
             try:
                 _ = self.recon_data['label']
