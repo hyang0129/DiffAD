@@ -215,7 +215,7 @@ if __name__ == '__main__':
                 inp = inp.to(device)
                 pred_diffs = [torch.squeeze(m(inp)) for m in reg_models]
 
-                var_over_models = torch.var(torch.concat(pred_diffs, dim=-1), dim=-1).cpu()
+                var_over_models = torch.var(torch.stack(pred_diffs, dim=-1), dim=-1).cpu()
 
                 vars.append(var_over_models)
 
