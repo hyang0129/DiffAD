@@ -115,34 +115,35 @@ if __name__ == '__main__':
 
 
 
-    # for i in tqdm(range(n_epoch), desc = 'epochs'):
-    #     for ii, train_data in pbar := tqdm(enumerate(train_loader)):
-    #         # # go from B1TC to BTC
-    #         inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
-    #         inp = inp.to(device)
-            #
-            #
-            # targets = targets.to(device)
-            #
-            # print(targets.shape)
-            #
-            # predictions = [torch.squeeze(m(inp)) for m in reg_models]
-            #
-            # print(predictions[0].shape)
-            #
-            # losses = [loss_fn(pred, targets) for pred in predictions]
-            #
-            # for i, loss in enumerate(losses):
-            #     reg_optim[i].zero_grad()
-            #     loss.backward()
-            #     reg_optim[i].step()
-            #
-            # epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
-            #
-            # pbar.set_description(f'''
-            # Training
-            # Loss : {float(torch.mean(torch.stack(epoch_losses)) ):.2f}
-            # ''' )
+    for i in tqdm(range(n_epoch), desc = 'epochs'):
+        epoch_losses = []
+
+        for ii, train_data in pbar := tqdm(enumerate(train_loader)):
+            # # go from B1TC to BTC
+            inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
+            inp = inp.to(device)
+
+            targets = targets.to(device)
+
+            print(targets.shape)
+
+            predictions = [torch.squeeze(m(inp)) for m in reg_models]
+
+            print(predictions[0].shape)
+
+            losses = [loss_fn(pred, targets) for pred in predictions]
+
+            for i, loss in enumerate(losses):
+                reg_optim[i].zero_grad()
+                loss.backward()
+                reg_optim[i].step()
+
+            epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
+
+            pbar.set_description(f'''
+            Training
+            Loss : {float(torch.mean(torch.stack(epoch_losses)) ):.2f}
+            ''' )
 
 
 
