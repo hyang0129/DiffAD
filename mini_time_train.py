@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     import json
 
-    test_config = json.load(args.config.replace('train', 'test'))
+    test_config = json.load(open(args.config.replace('train', 'test')))
     start_label = test_config['model']['beta_schedule']['test']['start_label']
     end_label = test_config['model']['beta_schedule']['test']['end_label']
     step_label = test_config['model']['beta_schedule']['test']['step_label']
@@ -201,6 +201,30 @@ if __name__ == '__main__':
         time_var : {float(torch.mean(torch.stack(epoch_time_var))):.2f}
         ''')
 
+
+        vars = []
+
+        with torch.no_grad():
+
+            for ii, train_data in (pbar := tqdm(enumerate(test_loader), mininterval=0.5)):
+
+                inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
+                inp = inp.to(device)
+                pred_diffs = [torch.squeeze(m(inp)) for m in reg_models]
+
+                var_over_models = torch.var(torch.concat(pred_diffs, dim=-1), dim=-1).cpu()
+
+                vars.append(var_over_models)
+
+        vars = np.array(torch.cat(vars, dim = 0))
+
+        all_datas = pd.DataFrame(
+            {
+                'label': np.reshape(vars, -1),
+                'differ': np.reshape(test_recon_data['differ'], -1),
+            }
+        )
+        best_f1, precision, recall = Metrics.relabeling_strategy(all_datas, strategy_params, return_all=True)
 
 
         # for
