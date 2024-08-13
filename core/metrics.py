@@ -95,7 +95,7 @@ def get_val_mean(df):
     return mean_dict
 
 
-def relabeling_strategy(df, params):
+def relabeling_strategy(df, params, return_all = False):
     y_true = []
     best_N = 0
     best_f1 = -1
@@ -132,7 +132,10 @@ def relabeling_strategy(df, params):
     precision = calculate_precision(y_true, best_predictions)
     recall = calculate_recall(y_true, best_predictions)
 
-    return best_f1
+    if return_all:
+        return best_f1, precision, recall
+    else:
+        return best_f1
 
 
 def predict_labels(df_sort, num):
