@@ -124,7 +124,9 @@ if __name__ == '__main__':
 
     import json
 
-    test_config = json.load(open(args.config.replace('train', 'test')))
+    with open(args.config.replace('train', 'test')) as f:
+        test_config = json.load(f)
+
     start_label = test_config['model']['beta_schedule']['test']['start_label']
     end_label = test_config['model']['beta_schedule']['test']['end_label']
     step_label = test_config['model']['beta_schedule']['test']['step_label']
