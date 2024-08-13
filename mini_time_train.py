@@ -109,6 +109,8 @@ if __name__ == '__main__':
     for k,v in sample_data.items():
         print(k, v.shape )
 
+    print(len(train_set))
+
     reg_models, loss_fn, reg_optim, reg_base = get_mini_model(input_channels=channels * 2)
 
 
