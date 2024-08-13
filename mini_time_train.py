@@ -178,15 +178,16 @@ if __name__ == '__main__':
                 loss.backward()
                 reg_optim[i].step()
 
-            epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
-            epoch_model_var.append(var_over_models.mean().cpu())
-            epoch_time_var.append(var_over_timesteps_of_var_over_models.mean().cpu())
 
             with torch.no_grad():
                 # print(torch.var(torch.var(torch.concat(pred_diffs, dim = -1), dim = -1), dim=-1) .shape   )
 
                 var_over_models = torch.var(torch.concat(pred_diffs, dim = -1), dim = -1)
                 var_over_timesteps_of_var_over_models = torch.var(var_over_models, dim = 1)
+
+            epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
+            epoch_model_var.append(var_over_models.mean().cpu())
+            epoch_time_var.append(var_over_timesteps_of_var_over_models.mean().cpu())
 
             pbar.set_description(f'''
             Training 
@@ -197,7 +198,7 @@ if __name__ == '__main__':
 
 
         print(f'''
-        Training
+        Training Epoch {i} 
         Loss : {float(torch.mean(torch.stack(epoch_losses))):.2f}  
         model_var : {float(torch.mean(torch.stack(epoch_model_var))):.2f}  
         time_var : {float(torch.mean(torch.stack(epoch_time_var))):.2f}
@@ -227,6 +228,8 @@ if __name__ == '__main__':
             }
         )
         best_f1, precision, recall = Metrics.relabeling_strategy(all_datas, strategy_params, return_all=True)
+
+        print(f'Epoch {i} Scores : P: {precision:.4f}, R: {recall:.4f}, F1: {best_f1:.4f} ')
 
 
         # for
