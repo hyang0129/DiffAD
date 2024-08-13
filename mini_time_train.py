@@ -127,6 +127,7 @@ if __name__ == '__main__':
             inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
             inp = inp.to(device)
 
+            targets = train_data['differ']
             targets = targets.to(device)
 
             print(targets.shape)
