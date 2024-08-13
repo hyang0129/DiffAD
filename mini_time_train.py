@@ -214,7 +214,7 @@ if __name__ == '__main__':
                 inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
                 # 11TC to TC
                 # TC to BTC
-                inp = torch.unsqueeze(torch.cat(inp, dim = 0))
+                inp = torch.unsqueeze(inp)
                 inp = inp.to(device)
                 pred_diffs = [torch.squeeze(m(inp)) for m in reg_models]
 
