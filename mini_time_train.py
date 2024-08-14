@@ -146,12 +146,12 @@ if __name__ == '__main__':
             'differ' : np.reshape(test_recon_data['differ'], -1),
         }
                              )
-    # best_f1, precision, recall  = Metrics.relabeling_strategy(all_datas, strategy_params, return_all=True)
+    best_f1, precision, recall  = Metrics.relabeling_strategy(all_datas, strategy_params, return_all=True)
     #
-    # print(f'Original Scores : P: {precision:.4f}, R: {recall:.4f}, F1: {best_f1:.4f} ')
+    print(f'Original Scores : P: {precision:.4f}, R: {recall:.4f}, F1: {best_f1:.4f} ')
 
 
-    for i in tqdm(range(n_epoch), desc = 'epochs'):
+    for ep in tqdm(range(n_epoch), desc = 'epochs'):
         epoch_losses = []
         epoch_model_var = []
         epoch_time_var = []
@@ -197,12 +197,7 @@ if __name__ == '__main__':
             ''' )
 
 
-        print(f'''
-        Training Epoch {i}
-        Loss : {float(torch.mean(torch.stack(epoch_losses))):.2f}
-        model_var : {float(torch.mean(torch.stack(epoch_model_var))):.2f}
-        time_var : {float(torch.mean(torch.stack(epoch_time_var))):.2f}
-        ''')
+
 
 
         vars = []
@@ -232,7 +227,13 @@ if __name__ == '__main__':
         )
         best_f1, precision, recall = Metrics.relabeling_strategy(all_datas, strategy_params, return_all=True)
 
-        print(f'Epoch {i} Scores : P: {precision:.4f}, R: {recall:.4f}, F1: {best_f1:.4f} ')
+        print(f'''
+        Training Epoch {ep}
+        Loss : {float(torch.mean(torch.stack(epoch_losses))):.5f}
+        model_var : {float(torch.mean(torch.stack(epoch_model_var))):.5f}
+        time_var : {float(torch.mean(torch.stack(epoch_time_var))):.5f}
+        ''')
+        print(f'Epoch {ep} Scores : P: {precision:.4f}, R: {recall:.4f}, F1: {best_f1:.4f} ')
 
 
         # for
