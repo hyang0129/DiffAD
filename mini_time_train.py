@@ -157,44 +157,44 @@ if __name__ == '__main__':
         epoch_time_var = []
 
 
-        for ii, train_data in (pbar := tqdm(enumerate(train_loader), mininterval=0.5)):
-            # # go from B1TC to BTC
-            inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
-            inp = inp.to(device)
-
-            diffs = train_data['differ']
-            diffs = diffs.to(device)
-
-            # print(targets.shape)
-
-            pred_diffs = [torch.squeeze(m(inp)) for m in reg_models]
-
-            # print(predictions[0].shape)
-
-            losses = [loss_fn(pred, diffs) for pred in pred_diffs]
-
-            for i, loss in enumerate(losses):
-                reg_optim[i].zero_grad()
-                loss.backward()
-                reg_optim[i].step()
-
-
-            with torch.no_grad():
-                # print(torch.var(torch.var(torch.concat(pred_diffs, dim = -1), dim = -1), dim=-1) .shape   )
-
-                var_over_models = torch.var(torch.stack(pred_diffs, dim = -1), dim = -1)
-                var_over_timesteps_of_var_over_models = torch.var(var_over_models, dim = 1)
-
-            epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
-            epoch_model_var.append(var_over_models.mean().cpu())
-            epoch_time_var.append(var_over_timesteps_of_var_over_models.mean().cpu())
-
-            pbar.set_description(f'''
-            Training 
-            Loss : {float(torch.mean(torch.stack(epoch_losses)) ):.2f}  
-            model_var : {float(torch.mean(torch.stack(epoch_model_var))):.2f}  
-            time_var : {float(torch.mean(torch.stack(epoch_time_var))):.2f}
-            ''' )
+        # for ii, train_data in (pbar := tqdm(enumerate(train_loader), mininterval=0.5)):
+        #     # # go from B1TC to BTC
+        #     inp = torch.squeeze(torch.cat([train_data['HR'], train_data['SR']], dim = -1))
+        #     inp = inp.to(device)
+        #
+        #     diffs = train_data['differ']
+        #     diffs = diffs.to(device)
+        #
+        #     # print(targets.shape)
+        #
+        #     pred_diffs = [torch.squeeze(m(inp)) for m in reg_models]
+        #
+        #     # print(predictions[0].shape)
+        #
+        #     losses = [loss_fn(pred, diffs) for pred in pred_diffs]
+        #
+        #     for i, loss in enumerate(losses):
+        #         reg_optim[i].zero_grad()
+        #         loss.backward()
+        #         reg_optim[i].step()
+        #
+        #
+        #     with torch.no_grad():
+        #         # print(torch.var(torch.var(torch.concat(pred_diffs, dim = -1), dim = -1), dim=-1) .shape   )
+        #
+        #         var_over_models = torch.var(torch.stack(pred_diffs, dim = -1), dim = -1)
+        #         var_over_timesteps_of_var_over_models = torch.var(var_over_models, dim = 1)
+        #
+        #     epoch_losses.append(torch.mean(torch.stack(losses, -1)).detach().cpu())
+        #     epoch_model_var.append(var_over_models.mean().cpu())
+        #     epoch_time_var.append(var_over_timesteps_of_var_over_models.mean().cpu())
+        #
+        #     pbar.set_description(f'''
+        #     Training
+        #     Loss : {float(torch.mean(torch.stack(epoch_losses)) ):.2f}
+        #     model_var : {float(torch.mean(torch.stack(epoch_model_var))):.2f}
+        #     time_var : {float(torch.mean(torch.stack(epoch_time_var))):.2f}
+        #     ''' )
 
 
         print(f'''
