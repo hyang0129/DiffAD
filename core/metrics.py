@@ -121,9 +121,9 @@ def relabeling_strategy(df, params, return_all = False):
                     y_pred[j] = 1
                     j += 1
 
-        print('Comparison of True and Pred')
-        print(y_true[:5])
-        print(y_pred[:5])
+        # print('Comparison of True and Pred')
+        # print(y_true[:5])
+        # print(y_pred[:5])
 
         f1 = calculate_f1(y_true, y_pred)
         if f1 > best_f1:
