@@ -226,8 +226,8 @@ if __name__ == '__main__':
 
         all_datas = pd.DataFrame(
             {
-                'label': np.reshape(vars, -1),
-                'differ': np.reshape(test_recon_data['differ'], -1),
+                'label': np.reshape(test_recon_data['label'], -1),
+                'differ': np.reshape(vars, -1),
             }
         )
         best_f1, precision, recall = Metrics.relabeling_strategy(all_datas, strategy_params, return_all=True)
