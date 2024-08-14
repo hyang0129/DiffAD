@@ -146,9 +146,9 @@ if __name__ == '__main__':
             'differ' : np.reshape(test_recon_data['differ'], -1),
         }
                              )
-    best_f1, precision, recall  = Metrics.relabeling_strategy(all_datas, strategy_params, return_all=True)
-
-    print(f'Original Scores : P: {precision:.4f}, R: {recall:.4f}, F1: {best_f1:.4f} ')
+    # best_f1, precision, recall  = Metrics.relabeling_strategy(all_datas, strategy_params, return_all=True)
+    #
+    # print(f'Original Scores : P: {precision:.4f}, R: {recall:.4f}, F1: {best_f1:.4f} ')
 
 
     for i in tqdm(range(n_epoch), desc = 'epochs'):
