@@ -196,13 +196,13 @@ if __name__ == '__main__':
         #     time_var : {float(torch.mean(torch.stack(epoch_time_var))):.2f}
         #     ''' )
 
-
-        print(f'''
-        Training Epoch {i} 
-        Loss : {float(torch.mean(torch.stack(epoch_losses))):.2f}  
-        model_var : {float(torch.mean(torch.stack(epoch_model_var))):.2f}  
-        time_var : {float(torch.mean(torch.stack(epoch_time_var))):.2f}
-        ''')
+        #
+        # print(f'''
+        # Training Epoch {i}
+        # Loss : {float(torch.mean(torch.stack(epoch_losses))):.2f}
+        # model_var : {float(torch.mean(torch.stack(epoch_model_var))):.2f}
+        # time_var : {float(torch.mean(torch.stack(epoch_time_var))):.2f}
+        # ''')
 
 
         vars = []
